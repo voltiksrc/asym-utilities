@@ -6,7 +6,7 @@ namespace fs = std::filesystem;
 
 int main() {
     for (const auto& file : fs::directory_iterator(".")) {
-        std::cout << file.path().filename().string() << '\n';
+        std::cout << file.path().filename().string();
     }
 
     return 0;
