@@ -23,12 +23,23 @@ int main(int argc, char* argv[]) {
     }
 
     bool failed = false;
+    bool parents = false;
 
     for (int i = 1; i < argc; ++i) {
+        if (string(argv[i]) == "-p") {
+            parents = true;
+            continue;
+        }
         try {
-            bool result = make_dir(argv[i]);
+            bool result;
 
-            if (!result) {
+            if (parents) {
+                result = make_directories(argv[i]);
+            } else {
+                result = make_dir(argv[i]);
+            }
+
+            if (!result && !parents) {
                 std::cerr << "Directory already exists: "
                           << argv[i] << '\n';
                 failed = true;
