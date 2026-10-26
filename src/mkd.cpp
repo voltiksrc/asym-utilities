@@ -1,20 +1,20 @@
-#include <filesystem>
-#include <string>
 #include <iostream>
 #include <vector>
+#include <string>
+#include <filesystem>
 
-using std::vector;
 using std::string;
-
+using std::vector;
 namespace fs = std::filesystem;
 
-bool make_directory(const fs::path& path) {
-    return fs::create_directory(path);
+bool make_dir(const fs::path& path) {
+     return fs::create_directory(path);
 }
 
 bool make_directories(const fs::path& paths) {
-    return fs::create_directories(paths);
+     return fs::create_directories(paths);
 }
+
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -22,36 +22,25 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    string directory = argv[1];
+    bool failed = false;
 
-    try {
-        bool result = make_directory(directory);
-
-        if (!result) {
-            std::cerr << "Directory already exists.\n";
-            return 1;
-        }
-
-    } catch (const fs::filesystem_error& error) {
-        std::cerr << "Failed to create directory: "
-                  << error.what() << '\n';
-        return 1;
-    }
-
-  for (int i = 1; i < argc; ++i) { 
+    for (int i = 1; i < argc; ++i) {
         try {
-            bool result = make_directories(directories);
+            bool result = make_dir(argv[i]);
 
             if (!result) {
-                std::cerr<<"One of these directories already exist.\n";
-                return 1;
+                std::cerr << "Directory already exists: "
+                          << argv[i] << '\n';
+                failed = true;
             }
 
         } catch (const fs::filesystem_error& error) {
-            std::cerr<<"Failed to create directory: "<<error.what()<<'\n';
-            return 1;
+            std::cerr << "Failed to create directory: "
+                      << error.what() << '\n';
+            failed = true;
         }
     }
 
-    return 0;
+    return failed ? 1 : 0;
 }
+
